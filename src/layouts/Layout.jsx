@@ -1,8 +1,8 @@
 import { NavLink, Outlet, Link } from "react-router-dom";
 import { useEffect } from "react";
-import minimalist_everyday_goods_logo from "./assets/images/minimalist_everyday_goods_logo.svg";
+import minimalist_everyday_goods_logo from "../assets/images/minimalist_everyday_goods_logo.svg";
 import { useDispatch, useSelector } from "react-redux";
-import { getAsyncCart, selectCartItemsCount } from "./slices/cartSlice";
+import { getAsyncCart, selectCartItemsCount } from "../slices/cartSlice";
 
 const Layout = () => {
   const { initialized } = useSelector((state) => state.cart);

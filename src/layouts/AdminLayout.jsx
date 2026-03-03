@@ -1,11 +1,11 @@
 import { NavLink, Outlet } from "react-router-dom";
-import minimalist_everyday_goods_logo from "./assets/images/minimalist_everyday_goods_logo.svg";
+import minimalist_everyday_goods_logo from "../assets/images/minimalist_everyday_goods_logo.svg";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Oval } from "react-loader-spinner";
 import { useDispatch } from "react-redux";
-import { showAsyncMessage } from "./slices/messageSlice";
+import { showAsyncMessage } from "../slices/messageSlice";
 
 const AdminLayout = () => {
   const getNavLinkClass = (isActive) => {

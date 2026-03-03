@@ -1,4 +1,4 @@
-import Layout from "../Layout";
+import Layout from "../layouts/Layout";
 import Home from "../pages/front/Home";
 import Products from "../pages/front/Products";
 import ProductDetail from "../pages/front/ProductDetail";
@@ -10,7 +10,7 @@ import PrivacyPolicy from "../pages/PrivacyPolicy";
 import NotFound from "../pages/NotFound";
 import axios from "axios";
 
-import AdminLayout from "../AdminLayout";
+import AdminLayout from "../layouts/AdminLayout";
 import AdminProducts from "../pages/admin/AdminProducts";
 
 const url = import.meta.env.VITE_URL;
