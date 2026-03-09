@@ -30,16 +30,11 @@ const AdminLayout = () => {
       return;
     }
 
-    //把 Token 設定到 Axios 的預設 Header 中
-    axios.defaults.headers.common["Authorization"] = token;
-
     const checkAdminLogin = async () => {
       try {
         await axios.post(`${url}/api/user/check`);
         setIsAuth(true);
       } catch {
-        navigate("/login");
-
         dispatch(
           showAsyncMessage({
             id: crypto.randomUUID(),

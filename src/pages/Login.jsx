@@ -44,8 +44,18 @@ const Login = () => {
       ?.split("=")[1];
 
     if (cookieToken) {
-      axios.defaults.headers.common["Authorization"] = cookieToken;
-      navigate("/admin/products");
+      // 有 Token 時才去檢查
+      const checkAdminLogin = async () => {
+        try {
+          await axios.post(`${url}/api/user/check`);
+          navigate("/admin/products");
+        } catch {
+          // token 失效，清掉 cookie
+          document.cookie =
+            "hexToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        }
+      };
+      checkAdminLogin();
       return;
     }
 
@@ -56,11 +66,9 @@ const Login = () => {
         expired,
       )};  path=/`;
 
-      axios.defaults.headers.common["Authorization"] = token;
-
       navigate("/admin/products");
     }
-  }, [tokenData, navigate]);
+  }, [tokenData, navigate, url]);
   return (
     <>
       <div className="d-flex flex-column justify-content-center align-items-center min-vh-100 login">
