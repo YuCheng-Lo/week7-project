@@ -19,6 +19,12 @@ const BootstrapModal = forwardRef((props, ref) => {
   const lastImageIsEmpty =
     images.length > 0 && images[images.length - 1] === "";
 
+  const handleImageError = (e) => {
+    const img = e.currentTarget;
+    img.onerror = null; // 確保只執行一次，防止無限噴錯
+    img.src = "https://placehold.co/600x400?text=No+Image";
+  };
+
   return (
     <>
       <div
@@ -93,6 +99,7 @@ const BootstrapModal = forwardRef((props, ref) => {
                           className="img-fluid"
                           src={templateProduct.imageUrl}
                           alt="主圖"
+                          onError={handleImageError}
                         />
                       )}
                     </div>
@@ -113,6 +120,7 @@ const BootstrapModal = forwardRef((props, ref) => {
                                 className="img-fluid"
                                 src={imageUrl}
                                 alt={`副圖${index + 1}`}
+                                onError={handleImageError}
                               />
                             )}
                           </div>
@@ -141,7 +149,7 @@ const BootstrapModal = forwardRef((props, ref) => {
                   <div className="col-sm-8">
                     <div className="mb-3">
                       <label htmlFor="title" className="form-label">
-                        標題
+                        標題 <span className="text-danger">*</span>
                       </label>
                       <input
                         id="title"
@@ -156,7 +164,7 @@ const BootstrapModal = forwardRef((props, ref) => {
                     <div className="row">
                       <div className="mb-3 col-md-6">
                         <label htmlFor="category" className="form-label">
-                          分類
+                          分類 <span className="text-danger">*</span>
                         </label>
                         <input
                           id="category"
@@ -169,7 +177,7 @@ const BootstrapModal = forwardRef((props, ref) => {
                       </div>
                       <div className="mb-3 col-md-6">
                         <label htmlFor="unit" className="form-label">
-                          單位
+                          單位 <span className="text-danger">*</span>
                         </label>
                         <input
                           id="unit"
@@ -185,7 +193,7 @@ const BootstrapModal = forwardRef((props, ref) => {
                     <div className="row">
                       <div className="mb-3 col-md-6">
                         <label htmlFor="origin_price" className="form-label">
-                          原價
+                          原價 <span className="text-danger">*</span>
                         </label>
                         <input
                           id="origin_price"
@@ -199,7 +207,7 @@ const BootstrapModal = forwardRef((props, ref) => {
                       </div>
                       <div className="mb-3 col-md-6">
                         <label htmlFor="price" className="form-label">
-                          售價
+                          售價 <span className="text-danger">*</span>
                         </label>
                         <input
                           id="price"
@@ -231,7 +239,7 @@ const BootstrapModal = forwardRef((props, ref) => {
 
                     <div className="mb-3">
                       <label htmlFor="description" className="form-label">
-                        產品描述
+                        產品描述 <span className="text-danger">*</span>
                       </label>
                       <textarea
                         id="description"

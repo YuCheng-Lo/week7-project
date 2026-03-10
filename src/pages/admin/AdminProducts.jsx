@@ -37,6 +37,9 @@ const AdminProducts = () => {
         keyboard: false,
       });
     }
+    return () => {
+      modalInstance.current?.dispose();
+    };
   }, [isLoading]);
 
   const getProducts = useCallback(
@@ -201,7 +204,71 @@ const AdminProducts = () => {
     });
   };
 
+  const isUrl = (url) => {
+    try {
+      new URL(url);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  const validateProduct = () => {
+    const {
+      title,
+      category,
+      unit,
+      description,
+      imageUrl,
+      imagesUrl,
+      origin_price,
+      price,
+      stock,
+    } = templateProduct;
+
+    if (!title.trim()) return "請輸入產品標題";
+    if (!category.trim()) return "請輸入產品分類";
+    if (!unit.trim()) return "請輸入產品單位";
+    if (!description.trim()) return "請輸入產品描述";
+
+    if (!imageUrl.trim()) return "請輸入產品圖片";
+    if (!isUrl(imageUrl)) return "圖片網址格式錯誤";
+
+    // 驗證副圖
+    for (let i = 0; i < imagesUrl.length; i++) {
+      const url = imagesUrl[i].trim();
+      if (url !== "" && !isUrl(url)) {
+        return `副圖 ${i + 1} 的網址格式錯誤`;
+      }
+    }
+
+    const originPrice = Number(origin_price) || 0;
+    const priceValue = Number(price) || 0;
+    const stockValue = Number(stock) || 0;
+
+    if (priceValue <= 0) return "售價必須大於0";
+    if (originPrice < priceValue) return "原價不能小於售價";
+    if (stockValue < 0) return "庫存不能小於0";
+
+    return null;
+  };
+
   const handleModalConfirm = async () => {
+    if (modalMode !== "delete") {
+      const error = validateProduct();
+      if (error) {
+        dispatch(
+          showAsyncMessage({
+            id: crypto.randomUUID(),
+            type: "danger",
+            title: "表單錯誤",
+            text: error,
+          }),
+        );
+        return;
+      }
+    }
+
     try {
       //清洗不必要的主、副圖資料
       const cleanMainImage =
@@ -244,17 +311,34 @@ const AdminProducts = () => {
       closeModal();
       await getProducts();
 
+      dispatch(
+        showAsyncMessage({
+          id: crypto.randomUUID(),
+          type: "success",
+          title: "成功",
+          text:
+            modalMode === "create"
+              ? "產品新增成功"
+              : modalMode === "edit"
+                ? "產品更新成功"
+                : "產品刪除成功",
+        }),
+      );
+
       //只有新增時才重置
       if (modalMode === "create") {
         setTemplateProduct(defaultProductState);
       }
-    } catch {
+    } catch (error) {
+      const apiMessage =
+        error?.response?.data?.message || "操作失敗，請重新再試";
+
       dispatch(
         showAsyncMessage({
           id: crypto.randomUUID(),
           type: "danger",
           title: "系統錯誤",
-          text: "操作失敗，請重新再試",
+          text: apiMessage,
         }),
       );
     }
