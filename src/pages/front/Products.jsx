@@ -1,9 +1,11 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import Pagination from "../../components/Pagination";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { addToCartAsync } from "../../slices/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { showAsyncMessage } from "../../slices/messageSlice";
+import { Oval } from "react-loader-spinner";
 
 const Products = () => {
   const url = import.meta.env.VITE_URL;
@@ -13,14 +15,21 @@ const Products = () => {
   const { loadingItemId } = useSelector((state) => state.cart);
   const dispatch = useDispatch();
 
+  const [isLoading, setIsLoading] = useState(true);
   const [products, setProducts] = useState([]);
+  const [pagination, setPagination] = useState({
+    current_page: 1,
+    total_pages: 1,
+  });
 
-  useEffect(() => {
-    const getProducts = async () => {
+  const getProducts = useCallback(
+    async (page = 1) => {
+      setIsLoading(true); //開始載入
       try {
-        const res = await axios.get(`${url}/api/${path}/products`);
+        const res = await axios.get(`${url}/api/${path}/products?page=${page}`);
 
         setProducts(res.data.products);
+        setPagination(res.data.pagination);
       } catch {
         dispatch(
           showAsyncMessage({
@@ -30,13 +39,45 @@ const Products = () => {
             text: "產品取得失敗，請稍後再試",
           }),
         );
+      } finally {
+        setIsLoading(false); //載入完成
       }
-    };
+    },
+    [url, path, dispatch],
+  );
 
-    getProducts();
-  }, [url, path, dispatch]);
+  const onPageChange = (page) => {
+    getProducts(page);
+  };
+
+  useEffect(() => {
+    const init = async () => {
+      await getProducts();
+    };
+    init();
+  }, [getProducts]);
+
+  if (isLoading) {
+    return (
+      <div className="d-flex flex-column align-items-center justify-content-center min-vh-100 ">
+        <Oval
+          height={60}
+          width={60}
+          color="#748be7"
+          secondaryColor="#0c4169"
+          strokeWidth={5}
+          strokeWidthSecondary={5}
+        />
+        <p className="mt-2">商品內容載入中...</p>
+      </div>
+    );
+  }
   return (
     <div className="container pt-5 my-5">
+      <div className="text-center mb-5">
+        <h1 className="fw-bold">商品列表</h1>
+        <p className="text-muted">挑選你喜歡的商品</p>
+      </div>
       <div className="row g-4">
         {products.map((product) => {
           return (
@@ -94,6 +135,9 @@ const Products = () => {
             </div>
           );
         })}
+      </div>
+      <div className="d-flex justify-content-center mt-5">
+        <Pagination pagination={pagination} onPageChange={onPageChange} />
       </div>
     </div>
   );

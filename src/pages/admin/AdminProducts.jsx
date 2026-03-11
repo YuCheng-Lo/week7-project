@@ -32,18 +32,22 @@ const AdminProducts = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (!isLoading) {
+    if (productModalRef.current) {
       modalInstance.current = new bootstrap.Modal(productModalRef.current, {
         keyboard: false,
       });
     }
     return () => {
-      modalInstance.current?.dispose();
+      if (modalInstance.current) {
+        modalInstance.current.dispose();
+        modalInstance.current = null;
+      }
     };
   }, [isLoading]);
 
   const getProducts = useCallback(
     async (page = 1) => {
+      setIsLoading(true); //開始載入
       try {
         const res = await axios.get(
           `${url}/api/${path}/admin/products?page=${page}`,
@@ -59,6 +63,8 @@ const AdminProducts = () => {
             text: "產品取得失敗，請稍後在試",
           }),
         );
+      } finally {
+        setIsLoading(false); //載入完成
       }
     },
     [url, path, dispatch],
@@ -67,7 +73,6 @@ const AdminProducts = () => {
   useEffect(() => {
     const init = async () => {
       await getProducts();
-      setIsLoading(false);
     };
     init();
   }, [getProducts]);
