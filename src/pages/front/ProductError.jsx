@@ -1,32 +1,21 @@
-import { useRouteError, Link } from "react-router-dom";
+import { useRouteError, Link, useNavigate } from "react-router-dom";
+import ApiCrashed from "../../components/ApiCrashed";
 
 const ProductError = () => {
   const error = useRouteError();
+  const navigate = useNavigate();
 
-  let message = "發生未知錯誤";
-  let status = "";
+  let message = "載入商品時發生錯誤";
 
   if (error instanceof Response) {
-    status = error.status;
-
     if (error.status === 404) {
-      message = "找不到該商品";
+      message = "哎呀！找不到這件商品";
     } else if (error.status === 500) {
-      message = "伺服器發生錯誤";
+      message = "伺服器有點累了，請稍後再試";
     }
   }
 
-  return (
-    <div className="container text-center pt-5 my-5">
-      <h2>
-        {status && `${status} - `}
-        {message}
-      </h2>
-      <Link to="/products" className="btn btn-primary mt-3">
-        返回商品列表
-      </Link>
-    </div>
-  );
+  return <ApiCrashed message={message} onRetry={() => navigate(0)} />;
 };
 
 export default ProductError;

@@ -41,50 +41,42 @@ export const cartSlice = createSlice({
       //addToCart
       .addCase(addToCartAsync.pending, (state, action) => {
         state.loadingItemId.add = action.meta.arg.productId;
-        state.error = null;
       })
       .addCase(addToCartAsync.fulfilled, (state) => {
         state.loadingItemId.add = null;
       })
-      .addCase(addToCartAsync.rejected, (state, action) => {
+      .addCase(addToCartAsync.rejected, (state) => {
         state.loadingItemId.add = null;
-        state.error = action.payload;
       })
       //removeCart
       .addCase(removeCartAsync.pending, (state) => {
         state.loading = true;
-        state.error = null;
       })
       .addCase(removeCartAsync.fulfilled, (state) => {
         state.loading = false;
       })
-      .addCase(removeCartAsync.rejected, (state, action) => {
+      .addCase(removeCartAsync.rejected, (state) => {
         state.loading = false;
-        state.error = action.payload;
       })
       //removeCartItem
       .addCase(removeCartItemAsync.pending, (state, action) => {
         state.loadingItemId.remove = action.meta.arg;
-        state.error = null;
       })
       .addCase(removeCartItemAsync.fulfilled, (state) => {
         state.loadingItemId.remove = null;
       })
-      .addCase(removeCartItemAsync.rejected, (state, action) => {
+      .addCase(removeCartItemAsync.rejected, (state) => {
         state.loadingItemId.remove = null;
-        state.error = action.payload;
       })
       //updateCartItemQty
       .addCase(updateCartItemQtyAsync.pending, (state, action) => {
         state.loadingItemId.update = action.meta.arg.cartItemId;
-        state.error = null;
       })
       .addCase(updateCartItemQtyAsync.fulfilled, (state) => {
         state.loadingItemId.update = null;
       })
-      .addCase(updateCartItemQtyAsync.rejected, (state, action) => {
+      .addCase(updateCartItemQtyAsync.rejected, (state) => {
         state.loadingItemId.update = null;
-        state.error = action.payload;
       });
   },
 });

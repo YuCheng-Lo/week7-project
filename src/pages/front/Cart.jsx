@@ -1,7 +1,7 @@
-// import axios from "axios";
 import { Link } from "react-router-dom";
 import { Oval } from "react-loader-spinner";
 import CartQtyControl from "../../components/CartQtyControl";
+import ApiCrashed from "../../components/ApiCrashed";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getAsyncCart,
@@ -13,7 +13,7 @@ import { useEffect } from "react";
 
 const Cart = () => {
   const dispatch = useDispatch();
-  const { carts, loading, final_total, loadingItemId, initialized } =
+  const { carts, loading, final_total, loadingItemId, error, initialized } =
     useSelector((state) => state.cart);
 
   useEffect(() => {
@@ -38,6 +38,13 @@ const Cart = () => {
       </div>
     );
   }
+
+  if (error) {
+    return (
+      <ApiCrashed message={error} onRetry={() => dispatch(getAsyncCart())} />
+    );
+  }
+
   return (
     <>
       <div className="container pt-5 my-5">
