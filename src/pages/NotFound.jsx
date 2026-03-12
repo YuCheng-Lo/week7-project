@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import ErrorView from "../components/ErrorView";
 
 const NotFound = () => {
   const navigate = useNavigate();
@@ -8,17 +9,19 @@ const NotFound = () => {
       navigate("/", {
         replace: true,
       });
-    }, 3000);
+    }, 5000);
 
     return () => {
       clearTimeout(timeout);
     };
   }, [navigate]);
   return (
-    <div className="container pt-5 my-5">
-      <h2>404 NotFound</h2>
-      <p>找不到頁面</p>
-    </div>
+    <ErrorView
+      title="404NotFound 找不到頁面"
+      message="這段時光似乎不存在，或是已經走遠了... 我們將在幾秒後帶您回到首頁。"
+      onRetry={() => navigate("/")}
+      buttonText="回到首頁"
+    />
   );
 };
 

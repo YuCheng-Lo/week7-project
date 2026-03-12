@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Oval } from "react-loader-spinner";
 import CartQtyControl from "../../components/CartQtyControl";
-import ApiCrashed from "../../components/ApiCrashed";
+import ErrorView from "../../components/ErrorView";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getAsyncCart,
@@ -41,7 +41,11 @@ const Cart = () => {
 
   if (error) {
     return (
-      <ApiCrashed message={error} onRetry={() => dispatch(getAsyncCart())} />
+      <ErrorView
+        title="資料載入失敗..."
+        message={error}
+        onRetry={() => dispatch(getAsyncCart())}
+      />
     );
   }
 

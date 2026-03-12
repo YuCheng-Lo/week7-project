@@ -1,5 +1,5 @@
-import { useRouteError, Link, useNavigate } from "react-router-dom";
-import ApiCrashed from "../../components/ApiCrashed";
+import { useRouteError, useNavigate } from "react-router-dom";
+import ErrorView from "../../components/ErrorView";
 
 const ProductError = () => {
   const error = useRouteError();
@@ -15,7 +15,13 @@ const ProductError = () => {
     }
   }
 
-  return <ApiCrashed message={message} onRetry={() => navigate(0)} />;
+  return (
+    <ErrorView
+      title="資料載入失敗..."
+      message={message}
+      onRetry={() => navigate(0)}
+    />
+  );
 };
 
 export default ProductError;
